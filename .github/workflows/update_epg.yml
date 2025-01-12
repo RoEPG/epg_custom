@@ -32,7 +32,7 @@ jobs:
 
       - name: Run the script
         run: |
-          python modificar_epg.py
+          python modify_epg.py
 
       - name: Commit changes
         run: |
