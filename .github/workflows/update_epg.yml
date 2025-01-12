@@ -1,0 +1,44 @@
+name: Update EPG
+
+on:
+  # Se ejecutará cada día a las 11:00, 15:00, 19:00 y 23:00 (UTC)
+  schedule:
+    - cron:  '0 11,15,19,23 * * *'
+  # Permite ejecutar el workflow manualmente desde la pestaña Actions
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write  # Necesario para poder hacer push al repositorio
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'  # O la versión que necesites
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install requests
+          # Si tienes un requirements.txt:
+          # pip install -r requirements.txt
+
+      - name: Run the script
+        run: |
+          python modificar_epg.py
+
+      - name: Commit changes
+        run: |
+          # Configuramos usuario y email para el commit
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m "Automated update of EPG"
+          git push
