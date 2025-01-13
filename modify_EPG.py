@@ -17,6 +17,32 @@ def remove_accents(text):
         text = text.replace(orig, repl)
     return text
 
+# Modifica canales estilo Movistar Accion
+def modify_M_channels(text):
+    rest_name = text.replace("M+ ", "M. ", 1)
+    rest_name = remove_accents(rest_name)
+    modified_text = rest_name
+    return modified_text
+
+#Modifica el Movistar Plus
+def modify_Movistar_Plus(text):
+    modified_text = text.replace("Movistar", "M.", 1)
+    if "+" in text:
+        modified_text = modified_text.replace("+", "")
+        return modified_text
+    else:
+        return modified_text
+
+# Modifica Canal Holywood
+def modify_Hollywood(text):
+    modified_text = text.replace("Canal ", "")
+    return modified_text
+
+# Modifica FDF
+def modify_FDF(text):
+    modified_text = text.replace("Factoría de Ficción", "FDF")
+    return modified_text
+
 def main():
     # 1. Descargar el archivo original
     print(f"Descargando EPG desde: {URL_XMLTV}")
@@ -37,13 +63,17 @@ def main():
     for channel in root.findall("channel"):
         for dname in channel.findall("display-name"):
             if dname.get("lang") == "es":
-                original_text = dname.text if dname.text else ""
+                text = dname.text if dname.text else ""
                 if dname.text and dname.text.startswith("M+ "):
-                    rest_name = dname.text.replace("M+ ", "M. ", 1)
-                    rest_name = remove_accents(rest_name)
-                    original_text = rest_name
-                if not original_text.startswith("ES: "):
-                    dname.text = f"ES: {original_text}"
+                    text = modify_M_channels(text)
+                if "Movistar" in dname.text:
+                    text = modify_Movistar_Plus(text)
+                if "Factoría de Ficción" in dname.text:
+                    text = modify_FDF(text)
+                if "Hollywood" in text and "Canal " in text:
+                    text = modify_Hollywood(text)
+                if not text.startswith("ES: "):
+                    dname.text = f"ES: {text}"
 
     # 4. Guardar la versión final con el nombre que necesitamos
     tree.write(FINAL_FILE, encoding="utf-8", xml_declaration=True)
