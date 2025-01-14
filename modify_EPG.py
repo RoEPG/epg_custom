@@ -43,6 +43,16 @@ def modify_FDF(text):
     modified_text = text.replace("Factoría de Ficción", "FDF")
     return modified_text
 
+# Modifica AXN White. Pasa a llamarse AXN Movies
+def modify_AXN_White(text):
+    modified_text = text.replace("AXN Movies", "AXN White")
+    return modified_text
+    
+# Modifica Star
+def modify_Star(text):
+    modified_text = text.replace("STAR Channel", "Star")
+    return modified_text
+
 def main():
     # 1. Descargar el archivo original
     print(f"Descargando EPG desde: {URL_XMLTV}")
@@ -64,14 +74,23 @@ def main():
         for dname in channel.findall("display-name"):
             if dname.get("lang") == "es":
                 text = dname.text if dname.text else ""
-                if dname.text and dname.text.startswith("M+ "):
+                text = remove_accents(text)
+                #Modifico la mayoria de canales de movistar. Los que aparecen como M+
+                if text and text.startswith("M+ "):
                     text = modify_M_channels(text)
-                if "Movistar" in dname.text:
+                    # Modifico Movistar Espanol
+                    if "Espanol" in text:
+                        text = text.replace("Espanol", "N")
+                if "Movistar" in text:
                     text = modify_Movistar_Plus(text)
-                if "Factoría de Ficción" in dname.text:
+                if "Factoría de Ficción" in text:
                     text = modify_FDF(text)
                 if "Hollywood" in text and "Canal " in text:
                     text = modify_Hollywood(text)
+                if "STAR Channel" in text:
+                    text = modify_Star(text)
+                if "AXN Movies" in text:
+                    text = modify_AXN_White(text)
                 if not text.startswith("ES: "):
                     dname.text = f"ES: {text}"
 
