@@ -1,9 +1,9 @@
 name: Update EPG
 
 on:
-  # Se ejecutará cada día a las 11:00, 15:00, 19:00 y 23:00 (UTC)
+  # Se ejecutará cada día a las 10:00, 14:00, 18:00 y 22:00 (UTC)
   schedule:
-    - cron:  '0 11,15,19,23 * * *'
+    - cron:  '0 10,14,18,22 * * *'
   # Permite ejecutar el workflow manualmente desde la pestaña Actions
   workflow_dispatch:
 
