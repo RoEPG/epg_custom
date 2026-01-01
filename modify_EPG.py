@@ -72,27 +72,27 @@ def main():
     
     for channel in root.findall("channel"):
         for dname in channel.findall("display-name"):
-            if dname.get("lang") == "es":
-                text = dname.text if dname.text else ""
-                text = remove_accents(text)
-                #Modifico la mayoria de canales de movistar. Los que aparecen como M+
-                if text and text.startswith("M+ "):
-                    text = modify_M_channels(text)
-                    # Modifico Movistar Espanol
-                    if "Espanol" in text:
-                        text = text.replace("Espanol", "N")
-                if "Movistar" in text:
-                    text = modify_Movistar_Plus(text)
-                if "Factoría de Ficción" in text:
-                    text = modify_FDF(text)
-                if "Hollywood" in text and "Canal " in text:
-                    text = modify_Hollywood(text)
-                if "STAR Channel" in text:
-                    text = modify_Star(text)
-                if "AXN Movies" in text:
-                    text = modify_AXN_White(text)
-                if not text.startswith("ES: "):
-                    dname.text = f"ES: {text}"
+            #if dname.get("lang") == "es":
+            text = dname.text if dname.text else ""
+            text = remove_accents(text)
+            #Modifico la mayoria de canales de movistar. Los que aparecen como M+
+            if text and text.startswith("M+ "):
+                text = modify_M_channels(text)
+                # Modifico Movistar Espanol
+                if "Espanol" in text:
+                    text = text.replace("Espanol", "N")
+            if "Movistar" in text:
+                text = modify_Movistar_Plus(text)
+            if "Factoría de Ficción" in text:
+                text = modify_FDF(text)
+            if "Hollywood" in text and "Canal " in text:
+                text = modify_Hollywood(text)
+            if "STAR Channel" in text:
+                text = modify_Star(text)
+            if "AXN Movies" in text:
+                text = modify_AXN_White(text)
+            if not text.startswith("ES: "):
+                dname.text = f"ES: {text}"
 
     # 4. Guardar la versión final con el nombre que necesitamos
     tree.write(FINAL_FILE, encoding="utf-8", xml_declaration=True)
